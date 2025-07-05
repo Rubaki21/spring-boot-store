@@ -37,8 +37,8 @@ public class ProductConsumer {
 
   @KafkaListener(topics = "out_store.shop_store.products_info", groupId = "my-consumer-store-group")
   public void consumeJsonMessage(final List<ProductDto> productDto,
-      @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) Integer key,
-      @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
+      @Header(KafkaHeaders.RECEIVED_KEY) Integer key,
+      @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
       @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long timestamp) {
     log.info("Received JSON productDto: {}", productDto);
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);

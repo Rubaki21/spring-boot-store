@@ -1,6 +1,6 @@
 package ru.technical.store.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

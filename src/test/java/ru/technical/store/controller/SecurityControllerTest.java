@@ -1,5 +1,8 @@
 package ru.technical.store.controller;
 
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.technical.store.entity.Role;
 import ru.technical.store.entity.Status;
 import ru.technical.store.entity.User;
@@ -10,8 +13,6 @@ import ru.technical.store.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,18 +22,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = SecurityController.class)
-@MockBeans({@MockBean(UserDetailsService.class), @MockBean(ProductService.class),
-        @MockBean(CategoryService.class), @MockBean(ReviewService.class)})
+@MockitoBean(types = {UserDetailsService.class, ProductService.class, CategoryService.class, ReviewService.class})
 class SecurityControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
     @Test
+    @WithAnonymousUser
     void getLoginPage() throws Exception {
         this.mockMvc.perform(get("/login"))
                 .andExpectAll(
@@ -58,6 +60,7 @@ class SecurityControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     void register() throws Exception {
         User user = new User("test@mail.com", "admin", "admin", "12345", Role.USER, Status.ACTIVE);
 
