@@ -1,0 +1,10 @@
+.idea
+*.iws
+*.iml
+*.ipr
+
+target
+.flattened-pom.xml
+
+/local_run/external/*
+/local_run/internal/*

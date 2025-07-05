@@ -1,0 +1,25 @@
+{
+  "namespace": "response",
+  "type": "record",
+  "name": "ResponseDto",
+  "fields": [
+    {
+      "name": "result",
+      "type": ["null", "boolean"],
+      "default": false
+    },
+    {
+      "name": "processingTime",
+      "type": "string"
+    },
+    {
+      "name": "productInfo",
+      "type": "string"
+    },
+    {
+      "name": "exceptionMessage",
+      "type": ["null", "string"],
+      "default": ""
+    }
+  ]
+}

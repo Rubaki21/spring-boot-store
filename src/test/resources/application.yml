@@ -1,0 +1,37 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:testdb:DB_CLOSE_DELAY=-1;
+    driverClassName: org.h2.Driver
+    password: ''
+  h2:
+    console:
+      enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-consumer-store-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: ru.technical.store.deserializer.ProductDtoJsonListDeserializer
+      max-poll-records: 1
+      properties:
+        max.poll.intervals.ms: 600000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  liquibase:
+    enabled: false
+    change-log: classpath:db/master-db.xml
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+server:
+  error:
+    whitelabel:
+      enabled: false

@@ -1,0 +1,27 @@
+{
+  "namespace": "store",
+  "type": "record",
+  "name": "ProductDto",
+  "fields": [
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "imageLocation",
+      "type": "string"
+    },
+    {
+      "name": "categoryName",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "int"
+    }
+  ]
+}
