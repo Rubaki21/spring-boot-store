@@ -63,8 +63,8 @@ public class ProductRestController {
     log.info("Find all products from external API: {}", externalProductApi);
     return """
         [
-          { "title": "мойq новый товар", "price": "21", "categoryName": "CPU" },
-          { "title": "мойrt новый товар", "price": "22", "categoryName": "CPU" }
+          { "title": "товар 1", "price": "21", "categoryName": "CPU", "quantity":"7" },
+          { "title": "товар 2", "price": "22.3", "categoryName": "CPU" }
         ]
         """;
   }
