@@ -2,6 +2,14 @@ logging:
   level:
     root: INFO
 
+integrations:
+  kafka-topic:
+    consumer: "out_store.shop_store.products_info"
+    producer: "shop_store.out_store.products_info"
+  external:
+    product-service:
+      url: "${EXTERNAL_GET_PRODUCT_URL:http://localhost:8080/external/products/findAll}"
+
 spring:
   application:
     name: store

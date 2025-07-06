@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header :: header}">
 </head>
 <body>
 <link href="../static/css/admin.css" th:href="@{/css/admin.css}" rel="stylesheet"/>
@@ -102,5 +102,8 @@
 </div>
 <br>
 <button role="button" type="button" onclick="window.location.href='index'" class="main">На главную</button>
+<br>
+<button role="button" type="button" onclick="window.location.href='/external/products/fetch'" class="main">Загрузить продукты
+    из внешнего источника</button>
 </body>
 </html>

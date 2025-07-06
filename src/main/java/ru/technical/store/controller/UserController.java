@@ -25,63 +25,63 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @GetMapping("/new")
-    public String createUser(Model model) {
-        List<Role> roles = List.of(Role.values());
-        List<Status> statuses = List.of(Status.values());
+  @GetMapping("/new")
+  public String createUser(Model model) {
+    List<Role> roles = List.of(Role.values());
+    List<Status> statuses = List.of(Status.values());
 
-        model.addAttribute("roles", roles);
-        model.addAttribute("statuses", statuses);
+    model.addAttribute("roles", roles);
+    model.addAttribute("statuses", statuses);
 
-        return "createUser";
+    return "createUser";
+  }
+
+  @PostMapping("/new")
+  public String createUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      log.warn("Binding result has error! " + bindingResult.getFieldError());
+      return "createUser";
     }
 
-    @PostMapping("/new")
-    public String createUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.warn("Binding result has error! " + bindingResult.getFieldError());
-            return "createUser";
-        }
+    userService.saveUser(user);
+    log.info("Register new user with email {} to database", user.getEmail());
+    return "redirect:/admin";
+  }
 
-        userService.saveUser(user);
-        log.info("Register new user with email {} to database", user.getEmail());
-        return "redirect:/admin";
+  @GetMapping("/edit/{id}")
+  public String editUser(@PathVariable("id") Long id, Model model) {
+    User user = userService.getUserById(id);
+    List<Role> roles = List.of(Role.values());
+    List<Status> statuses = List.of(Status.values());
+
+    model.addAttribute("userForm", user);
+    model.addAttribute("roles", roles);
+    model.addAttribute("statuses", statuses);
+
+    return "editUser";
+  }
+
+  @PostMapping("/edit/{id}")
+  public String editUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasErrors()) {
+      log.warn("Binding result has error! " + bindingResult.getFieldError());
+      model.addAttribute("userForm", user);
+      model.addAttribute("roles", List.of(Role.values()));
+      model.addAttribute("statuses", List.of(Status.values()));
+      return "editUser";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable("id") Long id, Model model) {
-        User user = userService.getUserById(id);
-        List<Role> roles = List.of(Role.values());
-        List<Status> statuses = List.of(Status.values());
+    userService.editUser(user);
+    log.info("Edit user with email {}", user.getEmail());
+    return "redirect:/admin";
+  }
 
-        model.addAttribute("userForm", user);
-        model.addAttribute("roles", roles);
-        model.addAttribute("statuses", statuses);
-
-        return "editUser";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editUser(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.warn("Binding result has error! " + bindingResult.getFieldError());
-            model.addAttribute("userForm", user);
-            model.addAttribute("roles", List.of(Role.values()));
-            model.addAttribute("statuses", List.of(Status.values()));
-            return "editUser";
-        }
-
-        userService.editUser(user);
-        log.info("Edit user with email {}", user.getEmail());
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
-        log.warn("Delete user with id {} from database", id);
-        return "redirect:/admin";
-    }
+  @PostMapping("/delete/{id}")
+  public String deleteUser(@PathVariable("id") Long id) {
+    userService.deleteUserById(id);
+    log.warn("Delete user with id {} from database", id);
+    return "redirect:/admin";
+  }
 }

@@ -12,37 +12,39 @@ import java.util.List;
 
 @Service
 public class ProductService {
-    private final ProductRepository repository;
-    private final CartService cartService;
 
-    @Autowired
-    public ProductService(ProductRepository repository, CartService cartService) {
-        this.repository = repository;
-        this.cartService = cartService;
-    }
+  private final ProductRepository repository;
+  private final CartService cartService;
 
-    public void saveProduct(Product product) {
-        repository.save(product);
-    }
+  @Autowired
+  public ProductService(ProductRepository repository, CartService cartService) {
+    this.repository = repository;
+    this.cartService = cartService;
+  }
 
-    public Product getProductById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-    }
+  public void saveProduct(Product product) {
+    repository.save(product);
+  }
 
-    public List<Product> getAllProducts() {
-        return repository.findAll();
-    }
+  public Product getProductById(Long id) {
+    return repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+  }
 
-    public Page<Product> getPaginatedProducts(int page, int pageSize) {
-        return repository.findAll(PageRequest.of(page - 1, pageSize));
-    }
+  public List<Product> getAllProducts() {
+    return repository.findAll();
+  }
 
-    public List<Product> getAllByCategoryAndTitle(String category, String title) {
-        return repository.findProductsByCategoryNameAndContainsTitle(category, title.trim()); // Метод trim() вызывается, чтобы
-    }                                                                              // отсечь лишние проблемы у запрашиваемого title
+  public Page<Product> getPaginatedProducts(int page, int pageSize) {
+    return repository.findAll(PageRequest.of(page - 1, pageSize));
+  }
 
-    public void deleteProductById(Long id) {
-        cartService.getAllCarts().forEach(cart -> cart.getProducts().remove(getProductById(id)));
-        repository.deleteById(id);
-    }
+  public List<Product> getAllByCategoryAndTitle(String category, String title) {
+    // trim() вызывается, чтобы отсечь лишние проблемы у запрашиваемого title
+    return repository.findProductsByCategoryNameAndContainsTitle(category, title.trim());
+  }
+
+  public void deleteProductById(Long id) {
+    cartService.getAllCarts().forEach(cart -> cart.getProducts().remove(getProductById(id)));
+    repository.deleteById(id);
+  }
 }

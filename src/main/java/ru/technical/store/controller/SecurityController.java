@@ -21,47 +21,47 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 public class SecurityController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) Boolean error, Model model) {
-        if (error != null) {
-            log.warn("Error during authorization");
-            model.addAttribute("msg", "Invalid email address or password, or this account does not exist");
-        }
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            log.warn("Error during authorization");
-            model.addAttribute("msg", "You are already logged in");
-            return "error/500";
-        }
-        return "login";
+  @GetMapping("/login")
+  public String login(@RequestParam(value = "error", required = false) Boolean error, Model model) {
+    if (error != null) {
+      log.warn("Error during authorization");
+      model.addAttribute("msg", "Invalid email address or password, or this account does not exist");
+    }
+    if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+      log.warn("Error during authorization");
+      model.addAttribute("msg", "You are already logged in");
+      return "error/500";
+    }
+    return "login";
+  }
+
+  @PostMapping("/logout")
+  public String logout() {
+    return "redirect:/login";
+  }
+
+  @GetMapping("/register")
+  public String register(Model model) {
+    if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+      log.warn("Error during authorization");
+      model.addAttribute("msg", "Вы уже авторизованы");
+      return "error/500";
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        return "redirect:/login";
+    return "register";
+  }
+
+  @PostMapping("/register")
+  public String registerPost(@Valid @ModelAttribute User user, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      log.warn("Binding result has error! " + bindingResult.getFieldError());
+      return "register";
     }
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            log.warn("Error during authorization");
-            model.addAttribute("msg", "Вы уже авторизованы");
-            return "error/500";
-        }
-
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerPost(@Valid @ModelAttribute User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.warn("Binding result has error! " + bindingResult.getFieldError());
-            return "register";
-        }
-
-        userService.saveUser(user);
-        log.info("Register new user with email {} to database", user.getEmail());
-        return "redirect:/login";
-    }
+    userService.saveUser(user);
+    log.info("Register new user with email {} to database", user.getEmail());
+    return "redirect:/login";
+  }
 }

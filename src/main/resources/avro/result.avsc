@@ -5,7 +5,10 @@
   "fields": [
     {
       "name": "result",
-      "type": ["null", "boolean"],
+      "type": [
+        "null",
+        "boolean"
+      ],
       "default": false
     },
     {
@@ -18,7 +21,10 @@
     },
     {
       "name": "exceptionMessage",
-      "type": ["null", "string"],
+      "type": [
+        "null",
+        "string"
+      ],
       "default": ""
     }
   ]

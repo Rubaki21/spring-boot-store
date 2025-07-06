@@ -23,36 +23,36 @@ import java.math.BigDecimal;
 @PreAuthorize("hasAuthority('USER')")
 public class CartController {
 
-    private final ProductService productService;
-    private final CartService cartService;
+  private final ProductService productService;
+  private final CartService cartService;
 
-    @GetMapping
-    public String cartView(Model model) {
-        Cart cart = cartService.getLoggedUserCart();
-        BigDecimal totalPrice = cartService.getTotalPriceCart();
+  @GetMapping
+  public String cartView(Model model) {
+    Cart cart = cartService.getLoggedUserCart();
+    BigDecimal totalPrice = cartService.getTotalPriceCart();
 
-        model.addAttribute("cart", cart.getProducts());
-        model.addAttribute("totalPrice", totalPrice);
+    model.addAttribute("cart", cart.getProducts());
+    model.addAttribute("totalPrice", totalPrice);
 
-        log.info("Redirect to /cart page");
-        return "cart";
-    }
+    log.info("Redirect to /cart page");
+    return "cart";
+  }
 
-    @PostMapping("/new/{id}")
-    public String addProdToCart(@PathVariable("id") Long id) {
-        Product product = productService.getProductById(id);
-        cartService.addProductToCart(product);
+  @PostMapping("/new/{id}")
+  public String addProdToCart(@PathVariable("id") Long id) {
+    Product product = productService.getProductById(id);
+    cartService.addProductToCart(product);
 
-        log.info("Add product with id {} to cart", product.getId());
-        return "redirect:/index";
-    }
+    log.info("Add product with id {} to cart", product.getId());
+    return "redirect:/index";
+  }
 
-    @PostMapping("/delete/{id}")
-    public String deleteProductFromCart(@PathVariable("id") Long id) {
-        Product product = productService.getProductById(id);
-        cartService.deleteProductFromCart(product);
+  @PostMapping("/delete/{id}")
+  public String deleteProductFromCart(@PathVariable("id") Long id) {
+    Product product = productService.getProductById(id);
+    cartService.deleteProductFromCart(product);
 
-        log.info("Delete product with id {} from cart", product.getId());
-        return "redirect:/cart";
-    }
+    log.info("Delete product with id {} from cart", product.getId());
+    return "redirect:/cart";
+  }
 }

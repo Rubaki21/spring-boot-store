@@ -1,6 +1,6 @@
 # This setup allows you to both connect from within the docker-compose context and from services running on your local
 # machine but not as part of the docker-compose setup. Any client connecting to the kafka from the outside can connect to
-# localhost:9092 while services running as part of the docker-compose connect to kafka:9093.
+# localhost:9092 while services running as part of the docker-compose connect to kafka:9093
 #
 # To access kafka-ui: http://localhost:7777
 #
@@ -24,8 +24,8 @@ services:
     networks:
       - local-kafka
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9092:9092"
       - "9093:9093"
     depends_on:
@@ -62,28 +62,29 @@ services:
       kafka-topics --bootstrap-server kafka:29092 --list
       "
 
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.2.15
-    container_name: schema-registry
-    networks:
-      - local-kafka
-    depends_on:
-      - zookeeper
-      - kafka
-    ports: 
-      - "8081:8081"
-    environment: 
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
-      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
-      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+#  если необходимо использовать auro schema, то можно развернуть и пользоваться
+#  schema-registry:
+#    image: confluentinc/cp-schema-registry:7.2.15
+#    container_name: schema-registry
+#    networks:
+#      - local-kafka
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+#      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
+#      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
+#      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     networks:
       - local-kafka
-    depends_on: 
+    depends_on:
       - kafka
     ports:
       - "7777:8080"

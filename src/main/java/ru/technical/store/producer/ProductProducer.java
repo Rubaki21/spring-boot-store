@@ -1,7 +1,6 @@
 package ru.technical.store.producer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ public class ProductProducer {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
 
-  @SneakyThrows
   public void sendMessage(String topicName, ResponseDto responseDto) {
     log.info("Start sending: {}", responseDto);
     kafkaTemplate.send(topicName, responseDto.toString());

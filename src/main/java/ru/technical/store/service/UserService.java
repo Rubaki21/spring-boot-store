@@ -14,40 +14,42 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  private final UserRepository userRepository;
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-    }
+  @Autowired
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+  public User getUserById(Long id) {
+    return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+  }
 
-    public User getLoggedUser() {
-        String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(loggedUserEmail).orElseThrow(() -> new UsernameNotFoundException(loggedUserEmail));
-    }
+  public List<User> getAllUsers() {
+    return userRepository.findAll();
+  }
 
-    public void saveUser(User user) {
-        userRepository.findByEmail(user.getEmail().toLowerCase()).ifPresent(s -> {
-            throw new UserAlreadyExistsException(user.getEmail());
-        });
+  public User getLoggedUser() {
+    String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository.findByEmail(loggedUserEmail).orElseThrow(() -> new UsernameNotFoundException(loggedUserEmail));
+  }
 
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        userRepository.save(user);
-    }
+  public void saveUser(User user) {
+    userRepository.findByEmail(user.getEmail().toLowerCase()).ifPresent(s -> {
+      throw new UserAlreadyExistsException(user.getEmail());
+    });
 
-    public void editUser(User user) { // Чтобы изменение существующего пользователя стало возможным, в методе убрана проверка на идентичную эл. почту.
-        userRepository.save(user);
-    }
+    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    userRepository.save(user);
+  }
 
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
+  public void editUser(User user) {
+    // Чтобы изменение существующего пользователя стало возможным, в методе убрана проверка на идентичную эл. почту.
+    userRepository.save(user);
+  }
+
+  public void deleteUserById(Long id) {
+    userRepository.deleteById(id);
+  }
 }

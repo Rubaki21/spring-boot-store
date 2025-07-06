@@ -10,10 +10,10 @@ import org.springframework.context.ApplicationContext;
 @RequiredArgsConstructor
 class StoreApplicationIT {
 
-    private final ApplicationContext ctx;
+  private final ApplicationContext ctx;
 
-    @Test
-    void contextLoads() {
-        Assertions.assertThat(ctx).isNotNull();
-    }
+  @Test
+  void contextLoads() {
+    Assertions.assertThat(ctx).isNotNull();
+  }
 }

@@ -11,11 +11,12 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p JOIN Category c ON (p.category.id = c.id) " + // Запрос для поиска товаров по категории и наименованию:
-            "WHERE UPPER(p.title) LIKE UPPER(CONCAT('%', :param1, '%')) " + // если оба поля не заполнены, выводятся все товары, если заполнено одно -
-            "AND (:param2 LIKE '' OR c.categoryName = :param2)")
+  @Query("SELECT p FROM Product p JOIN Category c ON (p.category.id = c.id) " + // Запрос для поиска товаров по категории и наименованию:
+      "WHERE UPPER(p.title) LIKE UPPER(CONCAT('%', :param1, '%')) " +
+      // если оба поля не заполнены, выводятся все товары, если заполнено одно -
+      "AND (:param2 LIKE '' OR c.categoryName = :param2)")
     // поиск по одному (конкретно если поле title пустое, SQL-запрос ищет по LIKE ''), если оба - по обоим
-    List<Product> findProductsByCategoryNameAndContainsTitle(@Param("param2") String catName, @Param("param1") String title);
+  List<Product> findProductsByCategoryNameAndContainsTitle(@Param("param2") String catName, @Param("param1") String title);
 
-    Page<Product> findAll(Pageable pageable);
+  Page<Product> findAll(Pageable pageable);
 }

@@ -2,6 +2,14 @@ logging:
   level:
     root: INFO
 
+integrations:
+  kafka-topic:
+    consumer: "out_store.shop_store.products_info"
+    producer: "shop_store.out_store.products_info"
+  external:
+    product-service:
+      url: "test-url"
+
 spring:
   datasource:
     username: sa

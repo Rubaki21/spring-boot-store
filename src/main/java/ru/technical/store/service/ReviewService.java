@@ -10,33 +10,34 @@ import java.util.List;
 
 @Service
 public class ReviewService {
-    private final ReviewRepository reviewRepository;
-    private final UserService userService;
 
-    @Autowired
-    public ReviewService(ReviewRepository reviewRepository, UserService userService) {
-        this.reviewRepository = reviewRepository;
-        this.userService = userService;
-    }
+  private final ReviewRepository reviewRepository;
+  private final UserService userService;
 
-    public void saveReview(Review review) {
-        review.setAuthor(userService.getLoggedUser());
-        reviewRepository.save(review);
-    }
+  @Autowired
+  public ReviewService(ReviewRepository reviewRepository, UserService userService) {
+    this.reviewRepository = reviewRepository;
+    this.userService = userService;
+  }
 
-    public Review getReviewById(Long id) {
-        return reviewRepository.findById(id).orElseThrow(() -> new ReviewNotFoundException(id));
-    }
+  public void saveReview(Review review) {
+    review.setAuthor(userService.getLoggedUser());
+    reviewRepository.save(review);
+  }
 
-    public List<Review> getReviewsByProductId(Long id) {
-        return reviewRepository.findAllByProductId(id);
-    }
+  public Review getReviewById(Long id) {
+    return reviewRepository.findById(id).orElseThrow(() -> new ReviewNotFoundException(id));
+  }
 
-    public List<Review> getAllReview() {
-        return reviewRepository.findAll();
-    }
+  public List<Review> getReviewsByProductId(Long id) {
+    return reviewRepository.findAllByProductId(id);
+  }
 
-    public void deleteReviewById(Long id) {
-        reviewRepository.deleteById(id);
-    }
+  public List<Review> getAllReview() {
+    return reviewRepository.findAll();
+  }
+
+  public void deleteReviewById(Long id) {
+    reviewRepository.deleteById(id);
+  }
 }

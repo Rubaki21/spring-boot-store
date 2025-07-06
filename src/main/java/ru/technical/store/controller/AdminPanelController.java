@@ -22,21 +22,22 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminPanelController {
-    private final CategoryService categoryService;
-    private final ProductService productService;
-    private final UserService userService;
 
-    @GetMapping
-    public String adminPageController(Model model) {
-        List<Category> categoryList = categoryService.getAllCategories();
-        List<Product> productList = productService.getAllProducts();
-        List<User> userList = userService.getAllUsers();
+  private final CategoryService categoryService;
+  private final ProductService productService;
+  private final UserService userService;
 
-        model.addAttribute("categoryList", categoryList);
-        model.addAttribute("productList", productList);
-        model.addAttribute("userList", userList);
+  @GetMapping
+  public String adminPageController(Model model) {
+    List<Category> categoryList = categoryService.getAllCategories();
+    List<Product> productList = productService.getAllProducts();
+    List<User> userList = userService.getAllUsers();
 
-        log.info("Redirect to admin panel");
-        return "admin";
-    }
+    model.addAttribute("categoryList", categoryList);
+    model.addAttribute("productList", productList);
+    model.addAttribute("userList", userList);
+
+    log.info("Redirect to admin panel");
+    return "admin";
+  }
 }
