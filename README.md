@@ -1,9 +1,8 @@
 # It's a shop
 
 ✅ Реализация интернет-магазина на Spring Boot 3
-<p align="center">
 
-<img src="src/main/resources/static/index.png" height=60% width=60%>
+<img src="src/main/resources/static/index.png">
 <hr>
 
 ## Технологии
@@ -23,14 +22,15 @@
 $ git clone git@github.com:Rubaki21/spring-boot-store.git
 ``` 
 
-**Собираем проект используя Maven**, пишем:
+**Собираем проект используя Maven**:
 
 ```
 $ mvn clean install
 ```
 **Убедитесь, что используете JDK 21+**
 
-**Локально запускаем:**
+**Команда для локального запуска:** необходимо убедиться, что при локальном запуске соединение с kafka в `src/main/resources/application.
+yml` стоит `bootstrap-servers: localhost:9092`
 
 ```
 $ mvn spring-boot:run
@@ -45,16 +45,17 @@ $ mvn spring-boot:run
 
 ## Инфрастуктура
 
-В корне проекта приложен docker-compose.yaml, который разворачивает всю необходимую инфраструктуру. Для этого необходимо, чтобы работал 
-Docker
+В корне проекта приложен `docker-compose.yaml`, который разворачивает всю необходимую инфраструктуру. Для этого необходимо, чтобы работал 
+`Docker`
 
-Развернуть инфраструктуру из корня проекта и подождать 30сек, пока создадутся топики:
+**Команда для разворачивания инфраструктуры:** необходимо убедиться, что стоите в корне проекта. После выполнения, необходимо подождать 
+около 30 сек, пока создадутся топики или увидеть их в `kafka-ui`
 
 ```
 $ docker compose up -d
 ```
 
-В инфраструктуре имеется `kafka-ui`, который работает на http://localhost:7777:
+В инфраструктуре имеется `kafka-ui`, который вызывается по http://localhost:7777:
 Использующиеся topic's можно увидеть во вкладке, <b>Topics</b>
 Автоматически создаются 2 топика
 1) `out_store.shop_store.products_info`: для загрузки product's
@@ -106,7 +107,7 @@ $ docker compose up -d
 
 Address endpoint: `external/products/fetch`. Для указания внешнего адреса, добавил `enviroment variable`: `EXTERNAL_GET_PRODUCT_URL`
 
-Добавил кнопку вызова `endpoint` в админ панели с названием `Загрузить продукты из внешнего источника`
+Кнопка вызова `endpoint` в админ панели с названием `Загрузить продукты из внешнего источника`
 
 ![rest-external-get-api.png](src/main/resources/static/rest-external-get-api.png)
 
@@ -144,10 +145,12 @@ $ docker build -t store .
 Запустите контейнер:
 
 ```
-$ docker run -d --name store -p8080:8080 store:latest
+$ docker run -d --name store --network=kafka_cluster_local-kafka -p8080:8080 store:latest
 ```
 
-**Готово!** Приложение будет запущено на порту 8080.
+Важно для подключения к другому docker container использовать параметр `--network=kafka_cluster_local-kafka`
+
+**Готово!** Приложение будет запущено на порту 8080 и имеет доступ к kafka:9093
 
 Чтобы выключить контейнер с приложением, введите:
 

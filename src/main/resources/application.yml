@@ -32,7 +32,8 @@ spring:
       mode: embedded
       platform: h2
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9093 # для docker container. Если запускать локально, то нужно localhost:9092 прописать
+#    bootstrap-servers: localhost:9092
     consumer:
       group-id: my-consumer-store-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

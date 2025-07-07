@@ -14,7 +14,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import store.ProductDto;
+import store.ProductAvroDto;
 
 /**
  * конфигурация consumer kafka
@@ -27,7 +27,7 @@ public class KafkaConsumerConfig {
   private final KafkaProperties properties;
 
   @Bean
-  public ConsumerFactory<String, List<ProductDto>> consumerFactory() {
+  public ConsumerFactory<String, List<ProductAvroDto>> consumerFactory() {
     final Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, String.join(",", properties.getBootstrapServers()));
     props.put(ConsumerConfig.GROUP_ID_CONFIG, properties.getConsumer().getGroupId());
@@ -42,8 +42,8 @@ public class KafkaConsumerConfig {
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, List<ProductDto>> kafkaListenerContainerFactory() {
-    ConcurrentKafkaListenerContainerFactory<String, List<ProductDto>> factory = new ConcurrentKafkaListenerContainerFactory<>();
+  public ConcurrentKafkaListenerContainerFactory<String, List<ProductAvroDto>> kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, List<ProductAvroDto>> factory = new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory());
     return factory;
   }

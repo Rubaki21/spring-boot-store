@@ -1,6 +1,7 @@
 package ru.technical.store.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import ru.technical.store.dto.ProductDto;
 import ru.technical.store.entity.Product;
 
 import java.util.List;
 import ru.technical.store.mapper.ProductMapper;
 import ru.technical.store.service.CategoryService;
 import ru.technical.store.service.ProductService;
-import store.ProductDto;
+import store.ProductAvroDto;
 
 @Slf4j
 @RestController
@@ -35,27 +37,36 @@ public class ProductRestController {
 
   @SneakyThrows
   @GetMapping("/fetch")
-  public void fetchExternalProducts(HttpServletResponse response) {
+  public List<ProductDto> fetchExternalProducts(HttpServletResponse response) {
     log.info("Fetching products from external API: {}", externalProductApi);
-    final List<ProductDto> products = restTemplate
+    final List<ProductAvroDto> products = restTemplate
         .exchange(
             externalProductApi,
             HttpMethod.GET,
             null,
-            new ParameterizedTypeReference<List<ProductDto>>() {
+            new ParameterizedTypeReference<List<ProductAvroDto>>() {
             }
         )
         .getBody();
 
-    for (ProductDto productDto : products) {
-      log.info("Received JSON productDto: {}", productDto);
-      final Product product = productMapper.convertProductFromDto(productDto);
+    if (products == null) {
+      log.warn("No products received from external API");
+      response.sendRedirect("/admin");
+      return List.of();
+    }
+
+    List<ProductDto> result = new ArrayList<>();
+    for (ProductAvroDto productAvroDto : products) {
+      log.info("Received JSON productDto: {}", productAvroDto);
+      final Product product = productMapper.convertProductFromAvroDto(productAvroDto);
       log.info("Product after mapping: {}", product);
       categoryService.fillCategory(product, product.getCategoryName());
+
+      result.add(productMapper.convertProductDtoFromProduct(product));
       productService.saveProduct(product);
     }
 
-    response.sendRedirect("/admin");
+    return result;
   }
 
   @GetMapping("findAll")

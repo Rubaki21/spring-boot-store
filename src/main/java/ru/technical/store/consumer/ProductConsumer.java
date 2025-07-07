@@ -16,7 +16,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import response.ResponseDto;
-import store.ProductDto;
+import store.ProductAvroDto;
 
 /**
  * kafka consumer, слушает сообщения в topic: out_store.shop_store.products_info и отправляет результат сохранения product's в topic:
@@ -36,13 +36,13 @@ public class ProductConsumer {
   private final CategoryService categoryService;
 
   @KafkaListener(topics = "${integrations.kafka-topic.consumer}", groupId = "${spring.kafka.consumer.group-id}")
-  public void consumeJsonMessage(final List<ProductDto> productDto,
+  public void consumeJsonMessage(final List<ProductAvroDto> productAvroDto,
       @Header(KafkaHeaders.RECEIVED_KEY) Integer key,
       @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
       @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long timestamp) {
-    log.info("Received JSON productDto: {}", productDto);
-    for (ProductDto dto : productDto) {
-      final Product product = productMapper.convertProductFromDto(dto);
+    log.info("Received JSON productDto: {}", productAvroDto);
+    for (ProductAvroDto dto : productAvroDto) {
+      final Product product = productMapper.convertProductFromAvroDto(dto);
       log.info("Product after mapping: {}", product);
       final ResponseDto response = ResponseDto.newBuilder()
           .setProductInfo(dto.toString())
