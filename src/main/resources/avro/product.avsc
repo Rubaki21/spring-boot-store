@@ -1,7 +1,7 @@
 {
   "namespace": "store",
   "type": "record",
-  "name": "ProductDto",
+  "name": "ProductAvroDto",
   "fields": [
     {
       "name": "title",
