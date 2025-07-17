@@ -8,7 +8,7 @@ integrations:
     producer: "shop_store.out_store.products_info"
   external:
     product-service:
-      url: "${EXTERNAL_GET_PRODUCT_URL:http://localhost:8080/external/products/findAll}"
+      url: "${EXTERNAL_GET_PRODUCT_URL}"
 
 spring:
   application:
@@ -34,8 +34,8 @@ spring:
       mode: embedded
       platform: h2
   kafka:
-    bootstrap-servers: kafka:9093 # для docker container. Если запускать локально, то нужно localhost:9092 прописать
-#    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9093 # docker container
+#    bootstrap-servers: localhost:9092 # локальный запуск
     consumer:
       group-id: my-consumer-store-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
