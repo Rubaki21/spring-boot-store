@@ -76,8 +76,7 @@ $ docker pull ereshkigall/store:1.0.0
 **Команда для запуска проекта в Docker-контейнере**
 
 ```
-$ docker run -d --name store --network=kafka_cluster_local-kafka -e 
-EXTERNAL_GET_PRODUCT_URL=http://localhost:8080/external/products/findAll -p8080:8080 -p9092:9092 ereshkigall/store:1.0.0
+$ docker run -d --name store --network=kafka_cluster_local-kafka -e EXTERNAL_GET_PRODUCT_URL=http://localhost:8080/external/products/findAll -p8080:8080 ereshkigall/store:1.0.0
 ```
 
 `EXTERNAL_GET_PRODUCT_URL` ссылается на **rest endpoint** во внешний источник, из которого могут быть получены 1 или несколько
